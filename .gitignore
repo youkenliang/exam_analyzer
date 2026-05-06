@@ -15,7 +15,7 @@ reports/*
 !reports/.gitignore
 !reports/README.md
 
-reports/*
+reports/*.pdf
 
 
 
