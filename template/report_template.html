@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>学生成绩分析报告</title>
+    <link rel="stylesheet" href="report_style.css">
+</head>
+<body>
+    <div class="page">
+        <!-- 报头部分 -->
+        <header>
+            <div class="report-title">
+                <h1>学生成绩综合分析报告</h1>
+                <p>学年：{{ meta.school_year }} | 考试：{{ meta.exam_name }} | 科目：{{ meta.subject }}</p>
+            </div>
+            <div class="report-date">导出日期：{{ meta.export_date }}</div>
+        </header>
+
+        <!-- 1. 核心看板 -->
+        <section class="metrics-grid">
+            <div class="metric-card">
+                <span class="label">参考人数</span>
+                <div class="value">{{ stats['参考人数'] }}<small>人</small></div>
+            </div>
+            <div class="metric-card highlight">
+                <span class="label">平均分</span>
+                <div class="value">{{ stats['平均分'] }}</div>
+                {% if compare %}
+                <div class="delta {{ 'up' if compare.avg_diff >= 0 else 'down' }}">
+                    {{ '↑' if compare.avg_diff >= 0 else '↓' }} {{ compare.avg_diff|abs }}
+                </div>
+                {% endif %}
+            </div>
+            <div class="metric-card">
+                <span class="label">及格率</span>
+                <div class="value">{{ stats['及格率'] }}<small>%</small></div>
+            </div>
+            <div class="metric-card">
+                <span class="label">最高分</span>
+                <div class="value">{{ stats['最高分'] }}</div>
+            </div>
+        </section>
+
+        <!-- 2. 分数分布细节 -->
+        <section class="section">
+            <h2 class="section-title">📊 分数分布细节</h2>
+            <div class="dist-container">
+                <!-- 左侧表格 -->
+                <table class="dist-table">
+                    <thead>
+                        <tr><th>分数等级</th><th>人数</th><th>占比</th></tr>
+                    </thead>
+                    <tbody>
+                        {% set total = stats['参考人数'] if stats['参考人数'] > 0 else 1 %}
+                        {% for label, count in dist.items() %}
+                        <tr>
+                            <td>{{ label }}</td>
+                            <td>{{ count }}</td>
+                            <td>{{ (count / total * 100)|round(1) }}%</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <!-- 右侧 CSS 模拟柱状图 -->
+                <div class="dist-chart">
+                    {% for label, count in dist.items() %}
+                    {% set percentage = (count / total * 100)|round(1) %}
+                    <div class="chart-row">
+                        <span class="row-label">{{ label }}</span>
+                        <div class="bar-bg">
+                            <!-- 限制宽度最大为 100% -->
+                            <div class="bar-fill" style="width: {{ percentage if percentage <= 100 else 100 }}%"></div>
+                        </div>
+                        <span class="row-value">{{ count }}人 ({{ percentage }}%)</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. 荣誉榜单 (并排布局) -->
+        <section class="section">
+            <h2 class="section-title">🏆 荣誉榜单</h2>
+            <div class="dual-tables">
+                <!-- 左表：考试排名 -->
+                <div class="table-wrapper">
+                    <h3>🌟 本次考试 TOP 10</h3>
+                    <table>
+                        <thead><tr><th>名次</th><th>姓名</th><th>分数</th></tr></thead>
+                        <tbody>
+                            {% for _, row in full_ranking.head(10).iterrows() %}
+                            <tr>
+                                <td>{{ row['rank'] }}</td>
+                                <td>{{ row['name'] }}</td>
+                                <td class="bold">{{ row['score'] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 右表：进退步明细 -->
+                <div class="table-wrapper">
+                    <h3>🚀 进步最快 TOP 10</h3>
+                    {% if compare %}
+                    <table>
+                        <thead><tr><th>姓名</th><th>上次</th><th>本次</th><th>进步</th></tr></thead>
+                        <tbody>
+                            {% for _, row in compare.full_compare.head(10).iterrows() %}
+                            <tr>
+                                <td>{{ row['name'] }}</td>
+                                <td>{{ row['score_old'] }}</td>
+                                <td>{{ row['score_new'] }}</td>
+                                <td class="text-up">+{{ row['score_change'] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <div class="no-data">暂无对比数据</div>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>本报告由成绩分析系统自动生成，仅供教学参考使用。</p>
+        </div>
+    </div>
+</body>
+</html>

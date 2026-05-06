@@ -1,0 +1,75 @@
+:root {
+    --primary-color: #008080; /* Teal 科学色调 */
+    --bg-light: #f4f7f6;
+    --border-color: #e0e0e0;
+    --text-main: #333;
+}
+
+body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; color: var(--text-main); margin: 0; padding: 0; }
+
+/* A4 纸张设置 */
+.page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 20mm;
+    margin: 10mm auto;
+    background: white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-sizing: border-box;
+    position: relative;
+}
+
+header {
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 10px;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.report-title h1 { margin: 0; color: var(--primary-color); font-size: 24pt; }
+.metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 30px; }
+
+.metric-card {
+    border: 1px solid var(--border-color);
+    padding: 15px;
+    text-align: center;
+    border-radius: 4px;
+}
+
+.metric-card.highlight { background-color: var(--bg-light); border-color: var(--primary-color); }
+.metric-card .value { font-size: 20pt; font-weight: bold; color: var(--primary-color); }
+.metric-card .delta.up { color: #d9534f; font-size: 10pt; }
+.metric-card .delta.down { color: #5cb85c; font-size: 10pt; }
+
+.section-title {
+    border-left: 5px solid var(--primary-color);
+    padding-left: 10px;
+    font-size: 16pt;
+    margin: 25px 0 15px;
+}
+
+/* 并排表格布局 */
+.dual-tables { display: flex; gap: 30px; }
+.table-wrapper { flex: 1; }
+.table-wrapper h3 { font-size: 12pt; color: #666; margin-bottom: 10px; }
+
+table { width: 100%; border-collapse: collapse; font-size: 10pt; }
+th { background: var(--bg-light); border-bottom: 2px solid var(--primary-color); padding: 8px; text-align: left; }
+td { border-bottom: 1px solid var(--border-color); padding: 8px; }
+
+/* 简易 CSS 柱状图 */
+.dist-container { display: flex; gap: 40px; align-items: flex-start; }
+.dist-chart { flex: 1; }
+.chart-row { display: flex; align-items: center; margin-bottom: 8px; }
+.bar-bg { flex: 1; background: #eee; height: 12px; margin: 0 10px; border-radius: 6px; overflow: hidden; }
+.bar-fill { background: var(--primary-color); height: 100%; }
+.row-label { width: 80px; font-size: 9pt; }
+
+.text-up { color: #d9534f; font-weight: bold; }
+
+@media print {
+    .page { margin: 0; box-shadow: none; }
+    button { display: none; }
+}

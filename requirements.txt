@@ -1,0 +1,9 @@
+streamlit
+pandas
+numpy
+matplotlib
+seaborn
+openpyxl
+python-docx   # 如果以后需要Word报告
+plotly        # 交互式图表
+FPDF2         # PDF生成
