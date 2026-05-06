@@ -1,7 +1,21 @@
-report/*
-!report/.gitkeep
+# Ignore everything inside data
+data/*
 
-data/scores.db
+# But keep the folder itself (by allowing specific files)
+!data/.gitignore
+!data/README.md
+
+# Still ignore database files explicitly
+data/*.db
+
+
+
+reports/*
+
+!reports/.gitignore
+!reports/README.md
+
+reports/*
 
 
 
